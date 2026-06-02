@@ -18,6 +18,30 @@ class Student:
         
 students = []
 
+def load_students():
+    try:
+        with open("students.txt", "r") as file:
+            for line in file:
+                data = line.strip().split(",")
+
+                if len(data) == 4:
+                    name = data[0]
+                    roll_no = data[1]
+                    department = data[2]
+                    parent_mobile = data[3]
+
+                    student = Student(
+                        name,
+                        roll_no,
+                        department,
+                        parent_mobile
+                    )
+
+                    students.append(student)
+
+    except FileNotFoundError:
+        print("No existing student records found.")
+
 def add_student():
     name = input("Enter Student Name: ")
     roll_no = input("Enter Roll no: ")
@@ -31,6 +55,11 @@ def add_student():
     new_student = Student(name, roll_no, department, contact_no)
 
     students.append(new_student)
+    with open("students.txt", "a") as file:
+        file.write(f"{name},{roll_no},{department},{contact_no}\n")
+    print("Student added successfully.")
+    
+
 
 def display_student():
     print("Student Details:")
@@ -49,17 +78,21 @@ def search_student():
 
 def update_student():
     roll_no = input("Enter Roll no to update: ")
+
     for student in students:
         if student.Student_rollno == roll_no:
             print("Student found:")
+
             name = input("Enter new Name: ")
             department = input("Enter new Department: ")
             contact_no = int(input("Enter new Parents Number: "))
+
             student.update(name, department, contact_no)
+
             print("Student updated successfully.")
             return
-        else:
-            print("Student not found")
+
+    print("Student not found")
 
 def delete_student():
     roll_no = input("Enter Roll no to delete: ")
@@ -70,6 +103,8 @@ def delete_student():
             return
         else:
             print("Student not found")
+
+load_students()
 
 while True:
     print("-------------------Student Management System-------------------")
